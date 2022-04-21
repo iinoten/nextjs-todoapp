@@ -1,18 +1,18 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
-import { atom, useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+// recoilからatomをimport
+import { atom, useRecoilState } from 'recoil'
 import CheckboxItem from '../components/checkItem'
 import styles from '../styles/Home.module.css'
 
 export const todoTaskState = atom({
   key: 'task',
   default: [
-      '昼寝をする',
-      '超昼寝をする',
-      '超超昼寝をする',
-      '超超超昼寝をする',
-    ],
+    '昼寝をする',
+    '超昼寝をする',
+    '超超昼寝をする',
+    '超超超昼寝をする',
+  ],
 })
 
 export const inputFormState = atom({
@@ -21,12 +21,13 @@ export const inputFormState = atom({
 })
 
 const Home: NextPage = () => {
-  const [tasksList, setTasksList] = useRecoilState(todoTaskState)
-  const [inputForm, setInputForm] = useRecoilState(inputFormState);
+  const [todoTasks, setTodoTasks] = useRecoilState(todoTaskState)
+  const [inputForm, setInputForm] = useRecoilState(inputFormState)
+
   const addTaskItem = () => {
     if(inputForm!="") {
-      setTasksList([
-        ...tasksList, inputForm
+      setTodoTasks([
+        ...todoTasks, inputForm
       ])
       setInputForm("")
     }
@@ -41,23 +42,19 @@ const Home: NextPage = () => {
 
       <main className={styles.main}>
         <h1>Todoリスト</h1>
-        <div>新しくやること</div>
-        <div className={styles.formSubmitButton}>
+        <h3>新しくやること</h3>
+        <div>
           <input value={inputForm} onChange={(e)=>{ setInputForm(e.target.value) }} />
           <button onClick={()=>addTaskItem()}>決定</button>
         </div>
         <ul>
           {
-            tasksList.map((item, index) => {
+            todoTasks.map((item,index) => {
               return <CheckboxItem id={index}>{item}</CheckboxItem>
             })
           }
         </ul>
       </main>
-
-      <footer className={styles.footer}>
-
-      </footer>
     </div>
   )
 }
